@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<!-- Esta es la cabeza principal de nuestro doc HTM donde hacemos las configuracion principales necesarias-->    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Harry Potter</title>
+    <link rel="shortcut icon" href="goldentrio.ico">
+</head>
+<!-- Este es el cuerpo de nuestro doc HTML -->
+
+<!-- Configuramos y añadimos estilos  a nuestro doc HTML implementando CSS-->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex; /* Activar Flexbox */
+        flex-direction: column; /* Ordena los elementos en columna */
+        justify-content: center; /* Centrar verticalmente */
+        align-items: center; /* Centrar horizontalmente */
+        height: 100vh; /* Ocupa toda la altura del viewport */
+        background-image: url('https://i.pinimg.com/originals/2d/16/6b/2d166b4735d18837e60a12efa8fb8af4.gif'); /* Fondo */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    h1 {
+        background-color:rgb(224, 4, 151);
+        text-align: center;
+    }
+
+    a {
+        color:rgb(0, 0, 0);
+        font-size: 20px;
+        text-align: center;
+        background-color:rgb(224, 4, 151)
+    }
+
+    b {
+        color:rgb(0, 0, 0);
+        font-size: 30px;
+        text-align: center;
+        background-color:rgb(4, 224, 103)
+    }
+
+    p {
+        text-align: center;
+    }
+
+    .img-container {
+        text-align: center;
+        display: block;
+    }
+
+    .container {
+        max-width: 400px;
+        padding: 20px;
+        background: rgb(228, 2, 2);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .hidden {
+        display: none;
+    }
+    
+    button {
+        padding: 10px 20px;
+        margin: 10px 0;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    .question {
+        font-size: 25px;
+        margin-bottom: 15px;
+
+    } 
+    
+    .options button {
+        display: block;
+        width: 100%;
+        margin: 5px 0;
+    }
+
+</style>
+<body>
+    <!-- Este es nuestro primer encabezado de nuestra trivia -->
+    <h1>Responde las siguientes preguntas sobre la saga Harry Potter</h1> 
+    <p><b> NOTA: Las preguntas están basadas en los acontecimientos sucedidos en los 7 libros</p></b>
+    <br><i><a href="https://ww3.lectulandia.com/autor/j-k-rowling/" target="_blank">Haga click aqui para descargar en linea los 7 libros de Harry Potter en PDF</a></i></br>
+    <span class="img-container">
+        <img src="https://pa1.aminoapps.com/6308/79e7ece304f5a8ff3f429d874f3b5c00affba51e_hq.gif">
+    </span>
+
+    <div class="container">
+        <!-- Formulario para creación de usuario -->
+        <div id="userForm">
+            <h2>¡Crea tu usuario para comenzar a jugar esta trivia!</h2>
+            <input type="text" id="username" placeholder="Ingresa tu nombre" required>
+            <button onclick="startTrivia()">Comenzar</button>
+        </div>
+    
+    <!-- Sección de trivia -->
+    <div id="triviaSection" class="hidden">
+        <div id="questionBox">
+            <p class="question"></p>
+            <div class="options"></div>
+        </div>
+        <button onclick="nextQuestion()">Siguiente</button>
+    </div>
+    
+    <!-- Mensaje final -->
+    <div id="endMessage" class="hidden">
+        <h3>¡Gracias por jugar, <span id="user"></span>!</h3>
+        <p>Puntuación final: <span id="score"></span></p>
+    </div>
+</body>
+    
+    <!--Agregamos JavaScript para realizar las preguntas y encasillar las respuestas-->
+    <script>
+        // Variables para controlar la trivia
+        let currentQuestion = 0;
+        let score = 0;
+        const questions = [
+            {
+                question: "¿Cuál es el rol de Peeves a lo largo de los libros?",
+                options: ["Peeves era profesor de Hogwarts", "Peeves era el poltergeist que molestaba a los de 1° año", 
+                "Peeves fue un antiguo director de Hogwarts", "Ninguna de las opciones es correcta"],
+                correct: 1
+            },
+            {
+                question: "¿En que lugar se conocen Harry Potter y Draco Malfoy?",
+                options: ["En la tienda de túnicas de Madame Malkin", "En el Callejon Diagon", "En Hogwarts", 
+                "En Hogsmeade"],
+                correct: 0
+            },
+            {
+                question: "¿Quién le entrega las branquialgas a Harry para la segunda prueba del Torneo de los 3 magos?",
+                options: ["Hermione Granger", "Alastor Moody", "Bellatrix Lestrange", "Dobby, el elfo"],
+                correct: 3
+            },
+            {
+                question: "¿En qué animal se convierte Rita Skeeter para obtener información secreta?",
+                options: ["Conejo", "Aguila", "Caballo", "Ninguna de las anteriores"],
+                correct: 3
+            },
+            {
+                question: "¿Por quién es asesinado Gellert Grindewald?",
+                options: ["Draco Malfoy", "Albus Dumbledore", "Lord Voldemort", "Ninguna opción es correcta"],
+                correct: 2
+            },
+
+        ];
+
+         // Mostrar trivia
+        function startTrivia() {
+            const username = document.getElementById("username").value;
+            if (!username) {
+                alert("Por favor, ingrese su nombre para iniciar el juego.");
+                return;
+            }
+            document.getElementById("user").textContent = username;
+            document.getElementById("userForm").classList.add("hidden");
+            document.getElementById("triviaSection").classList.remove("hidden");
+            showQuestion();
+        }
+
+        // Mostrar pregunta actual
+        function showQuestion() {
+            const questionBox = document.getElementById("questionBox");
+            const questionText = questionBox.querySelector(".question");
+            const optionsBox = questionBox.querySelector(".options");
+
+            const questionData = questions[currentQuestion];
+            questionText.textContent = questionData.question;
+            optionsBox.innerHTML = ""; // Limpiar opciones anteriores
+
+            questionData.options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.onclick = () => checkAnswer(index);
+                optionsBox.appendChild(button);
+            });
+        }
+        
+        // Verificar respuesta
+        function checkAnswer(selected) {
+            const correct = questions[currentQuestion].correct;
+            if (selected === correct) {
+                score++;
+                alert("¡Correcto!");
+            } else {
+                alert(`Incorrecto. La respuesta correcta era: ${questions[currentQuestion].options[correct]}`);
+            }
+        }
+
+         // Pasar a la siguiente pregunta
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                endTrivia();
+            }
+        }
+        
+        // Finalizar trivia
+        function endTrivia() {
+            document.getElementById("triviaSection").classList.add("hidden");
+            document.getElementById("endMessage").classList.remove("hidden");
+            document.getElementById("score").textContent = `${score} / ${questions.length}`;
+        }
+    </script> 
+
+</html>
